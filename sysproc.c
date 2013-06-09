@@ -88,3 +88,14 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+// halt system call, telling QEMU to exit.
+int 
+sys_halt(void)
+{
+  cprintf("calling sys_halt\n");
+  char *p = "Shutdown";
+  for( ; *p; p++)
+    outb(0x8900, *p);
+  return 0;
+}
