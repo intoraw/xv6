@@ -14,6 +14,8 @@ extern uint vectors[];  // in vectors.S: array of 256 entry pointers
 struct spinlock tickslock;
 uint ticks;
 
+int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
+
 void
 tvinit(void)
 {
@@ -46,6 +48,24 @@ trap(struct trapframe *tf)
     return;
   }
 
+  //Lazy page allocation
+  if(tf->trapno == T_PGFLT) {
+    // alloc PA
+    char * mem;
+    mem = kalloc();
+    if(mem == 0){
+      cprintf("alloc lazy page, out of memory\n");
+      return ;
+    }
+    memset(mem, 0, PGSIZE);
+
+    // create PTE and map page to PGDIR
+    uint a = PGROUNDDOWN(rcr2());
+    mappages(proc->pgdir, (char*) a, PGSIZE, v2p(mem), PTE_W | PTE_U);
+    return ;
+  }
+
+
   switch(tf->trapno){
   case T_IRQ0 + IRQ_TIMER:
     if(cpu->id == 0){
@@ -77,7 +97,7 @@ trap(struct trapframe *tf)
             cpu->id, tf->cs, tf->eip);
     lapiceoi();
     break;
-   
+
   //PAGEBREAK: 13
   default:
     if(proc == 0 || (tf->cs&3) == 0){
