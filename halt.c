@@ -2,6 +2,7 @@
 #include "stat.h"
 #include "user.h"
 
+/*
 int
 halt(void) 
 {
@@ -13,6 +14,7 @@ halt(void)
   );
   return ret;
 }
+*/
 
 int
 main(int argc, char *argv[])
