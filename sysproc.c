@@ -103,3 +103,22 @@ sys_halt(void)
     outb(0x8900, *p);
   return 0;
 }
+
+// xv6 CPU alarm
+int
+sys_alarm(void)
+{
+  int ticks;
+  void (*handler)(void);
+  
+  if(argint(0, &ticks) < 0)
+    return -1;
+  if(argptr(1, (char**)&handler, 1) < 0)
+    return -1;
+  proc->alarmticks = ticks;
+  proc->alarmhandler = handler;
+  cprintf("handler %p\n", handler);
+  handler();
+  return 0;
+}
+

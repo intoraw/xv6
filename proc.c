@@ -70,6 +70,10 @@ found:
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
 
+  // xv6 CPU alarmticked initialize
+  p->alarmticked = 0;
+  p->alarmticks = INVALID_ALARMTICKS;
+
   return p;
 }
 

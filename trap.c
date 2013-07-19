@@ -75,6 +75,18 @@ trap(struct trapframe *tf)
       release(&tickslock);
     }
     lapiceoi();
+
+    // xv6 CPU alarm
+    if(proc && (tf->cs & 3) == 3 && proc->alarmticks != INVALID_ALARMTICKS) {
+      proc->alarmticked += 1;
+      if(proc->alarmticked >= proc->alarmticks ) {
+        proc->alarmticked = 0;
+        cprintf("hit\n");
+        switchuvm(proc);
+        proc->alarmhandler();
+        switchkvm();
+      }
+    }
     break;
   case T_IRQ0 + IRQ_IDE:
     ideintr();
