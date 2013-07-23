@@ -8,6 +8,7 @@ alltraps:
   pushl %es
   pushl %fs
   pushl %gs
+  # save all
   pushal
   
   # Set up data and per-cpu segments.

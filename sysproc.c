@@ -117,8 +117,9 @@ sys_alarm(void)
     return -1;
   proc->alarmticks = ticks;
   proc->alarmhandler = handler;
-  cprintf("handler %p\n", handler);
-  handler();
+  proc->alarmsignal = ASIG_NACTIVATED;
+//  cprintf("handler %p\n", handler);
+//  handler();
   return 0;
 }
 

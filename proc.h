@@ -3,6 +3,9 @@
 
 // xv6 CPU alarm
 #define INVALID_ALARMTICKS (-1)
+#define ASIG_DISABLED   (0)
+#define ASIG_NACTIVATED (1)
+#define ASIG_ACTIVATED  (2)
 
 // Per-CPU state
 struct cpu {
@@ -73,6 +76,7 @@ struct proc {
   int alarmticks;              // xv6 CPU alarm ticks
   void (*alarmhandler)();      // xv6 CPU alarm handler
   int alarmticked;             // xv6 CPU alarm ticked time
+  int alarmsignal;             // xv6 CPU alarm signal , 0 disable 1 not-activated  2 activated
 };
 
 // Process memory is laid out contiguously, low addresses first:

@@ -34,6 +34,7 @@ idtinit(void)
   lidt(idt, sizeof(idt));
 }
 
+
 //PAGEBREAK: 41
 void
 trap(struct trapframe *tf)
@@ -77,14 +78,12 @@ trap(struct trapframe *tf)
     lapiceoi();
 
     // xv6 CPU alarm
-    if(proc && (tf->cs & 3) == 3 && proc->alarmticks != INVALID_ALARMTICKS) {
+    if(proc && (tf->cs & 3) == 3 && proc->alarmsignal == ASIG_NACTIVATED) {
       proc->alarmticked += 1;
       if(proc->alarmticked >= proc->alarmticks ) {
+        // send signal
         proc->alarmticked = 0;
-        cprintf("hit\n");
-        switchuvm(proc);
-        proc->alarmhandler();
-        switchkvm();
+        proc->alarmsignal = ASIG_ACTIVATED;
       }
     }
     break;

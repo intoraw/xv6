@@ -72,7 +72,8 @@ found:
 
   // xv6 CPU alarmticked initialize
   p->alarmticked = 0;
-  p->alarmticks = INVALID_ALARMTICKS;
+  p->alarmticks = 0;
+  p->alarmsignal = ASIG_DISABLED;
 
   return p;
 }
